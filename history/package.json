@@ -1,0 +1,13 @@
+
+{
+  "name": "stagesimplelights",
+  "description": "Interactive Controller with the Stage Simple Lightboxes",
+  "author": "Victor Hung <victorhung92@gmail.com>",
+  "dependencies": {
+    "serialport": "*"
+  },
+  "engines": {
+    "node": "0.8.16"
+  },
+  "license": "MIT"
+}

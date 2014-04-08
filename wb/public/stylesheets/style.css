@@ -1,0 +1,36 @@
+body {
+  padding: 50px;
+  background-color: #fff;
+}
+
+a {
+  color: #00B7FF;
+}
+
+textarea {
+  font: 14px sans-serif;
+  height: 1000px;
+  width: 300px;
+  line-height: 20px;
+  position: absolute:
+  z-index: 10;
+  background-color: rgba(255,255,255,0);
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+  height: 300px;
+  width: 300px;
+  overflow: scroll;
+}
+
+.line-indicator {
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
+  width: 300px;
+  height: 20px;
+  background-color: rgba(242, 216, 0, 0.5);
+}

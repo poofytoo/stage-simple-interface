@@ -1,0 +1,50 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+</body>
+</html>
+warning: content is not saved <br /><br />
+<div class="container">
+  <div class="line-indicator"></div>
+  <textarea id="cmds"></textarea><br />
+</div>
+
+
+<button id="go">Run Command</button>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var currentLine = 0;
+  
+  var updateLine = function(){
+  
+    $('.line-indicator').css('top',currentLine*20 + 'px');
+  }
+  
+  $("#cmds").on('click', function(){
+    line = getLineNumber($('#cmds'));
+    currentLine = line;
+    updateLine();
+  });
+  
+  $('#go').on('click', function(){
+    commands = $('#cmds').val();
+    data = {cmds: commands};
+    $.post('service', data, function(data){
+      if (data === 'ok') {  
+        currentLine ++;
+        updateLine();
+      }
+    })
+    
+  });
+});
+
+
+    function getLineNumber(textarea) {
+        return textarea.val().substr(0, textarea[0].selectionStart).split("\n").length - 1;
+    }
+</script>
