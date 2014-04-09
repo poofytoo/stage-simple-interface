@@ -3,8 +3,9 @@ var events = require('events');
 var eventEmitter = new events.EventEmitter();
 
 function serialConnection() {
-  var CONNECTION_PORT = "/dev/tty.usbmodem1411"
+  var CONNECTION_PORT = "/dev/tty.usbmodem1421"
   var portFound = false;
+  var serialPort;
   
   this.init = function(){
     initPorts = function(){
@@ -24,7 +25,7 @@ function serialConnection() {
     }
     
     serialHelloConnect = function(){
-      var serialPort = new SerialPort(CONNECTION_PORT, {
+      serialPort = new SerialPort(CONNECTION_PORT, {
         baudrate: 9600
       });
       serialPort.on('open', function (err) {
@@ -44,11 +45,15 @@ function serialConnection() {
   
   this.serialwrite = function(data){
     if (portFound){
-      serialPort.write(data, function(err, results) {
-        if (err != undefined){
-          console.log(err);
-        }
-      });
+      //console.log(serialPort);
+      console.log(data);
+      for (i = 0; i < 10; i ++) {
+        serialPort.write(data, function(err, results) {
+          if (err != undefined){
+            console.log(err);
+          }
+        });
+      }
     } else {
       console.log(data);
       return data;

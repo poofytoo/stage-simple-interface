@@ -3,42 +3,39 @@ function commands(service) {
   this.characters = false;
 
   this.allOff = function() {
-    packet = [0xAA, 0x82, 0, 0, 0]
-    console.log(packet);
+    packet = [0xAA, 0xFF, 0, 0, 0];
     this.s.serialwrite(packetToReturn(packet));
   }
 
   this.allOn = function(r, g, b) {
-    packet = [0xAA, 0x82, r, g, b];
-    console.log(packet);
-    this.s.serialwrite(packetToReturn(packet));
+    packet = [0xAA, 0xFF, r, g, b];
+    //this.s.serialwrite(packetToReturn(packet));
   }
 
   this.oneOff = function(light) {
-    packet = [0xAA, (light << 4) || 0x2, 0, 0, 0];
-    console.log(packet);
+    packet = [0xAA, light, 0, 0, 0];
     this.s.serialwrite(packetToReturn(packet));
   }
 
-  this.oneAllOn = function(light, r, g, b) {
-    packet = [0xAA, (light << 4) || 2, r, g, b];
-    console.log(packet);
-    this.s.serialwrite(packetToReturn(packet));
+  this.oneOn = function(light, r, g, b) {
+    packet = [0xAA, light, r, g, b];
+    this.s.serialwrite(packet);
   }
 
-  // Row is either 0 or 1
-  this.oneSingleRowOn = function(light, row, r, g, b) {
-    packet = [0xAA, (light << 4) || row, r, g, b]
-    console.log(packet);
-    this.s.serialwrite(packetToReturn(packet));
+  this.oneOn = function(light, r, g, b) {
+    packet = [0xAA, light, r, g, b];
+    this.s.serialwrite(packet);
   }
-
-  this.oneSingleRowOff = function(light, row) {
-    packet = [0xAA, (light << 4) || row, 0, 0, 0]
-    console.log(packet);
-    this.s.serialwrite(packetToReturn(packet));
+  
+  this.flicker = function() {
+    console.log('flicker!');
+    for (i = 0; i < 10; i ++) {
+      console.log(i);
+      //packet = [0xAA, 2, i, i, i];
+      //this.s.serialwrite(packet);
+    }
   }
-
+  
   packetToReturn = function(packet) {
     if (this.characters) {
       return packetToCharArray(packet);

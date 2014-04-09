@@ -32,7 +32,9 @@ $(document).ready(function(){
   
   $('#go').on('click', function(){
     commands = $('#cmds').val();
-    data = {cmds: commands};
+    cmd = commands.split('\n')[currentLine];
+    data = {cmd: cmd};
+    
     $.post('service', data, function(data){
       if (data === 'ok') {  
         currentLine ++;
@@ -43,8 +45,7 @@ $(document).ready(function(){
   });
 });
 
-
-    function getLineNumber(textarea) {
-        return textarea.val().substr(0, textarea[0].selectionStart).split("\n").length - 1;
-    }
+function getLineNumber(textarea) {
+    return textarea.val().substr(0, textarea[0].selectionStart).split("\n").length - 1;
+}
 </script>
