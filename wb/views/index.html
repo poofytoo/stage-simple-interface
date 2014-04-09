@@ -6,14 +6,25 @@
 <body>
 </body>
 </html>
-warning: content is not saved <br /><br />
-<div class="container">
-  <div class="line-indicator"></div>
-  <textarea id="cmds"></textarea><br />
+<h1>SIMPLE Stage Interface</h1>
+<h2>warning: content is not saved</h2>
+<div class="controls">
+  <div class="container">
+    <div class="line-indicator"></div>
+    <textarea id="cmds"></textarea><br />
+  </div>
+  <button id="go">Run Command</button>
 </div>
-
-
-<button id="go">Run Command</button>
+<div class="commands-list">
+  <h3>oneOn(BOX, R, G, B);</h3>
+  <p>Turns on <em>BOX</em> to <em>R</em>, <em>G</em>, <em>B</em></p>
+  <h3>oneOff(BOX);</h3>
+  <p>Turns off <em>BOX</em></p>
+  <h3>flicker();</h3>
+  <p>makes box 4 flicker</p>
+  <h3>kill();</h3>
+  <p>stops all animations (flickers, fade, etc)</p>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function(){
