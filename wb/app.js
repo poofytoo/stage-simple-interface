@@ -9,6 +9,18 @@ var path = require('path');
 var hbs = require('hbs');
 var app = express();
 
+var SerialConnection = require('./lib/service');
+var Commands = require('./lib/commands');
+
+var serv = new SerialConnection();
+var cmd = new Commands(serv);
+
+cmd.allOff();
+cmd.allOn();
+cmd.oneOff(2);
+cmd.oneOff(3);
+cmd.oneAllOn(5, 255, 255, 255);
+
 /**
  * Routes
  */
