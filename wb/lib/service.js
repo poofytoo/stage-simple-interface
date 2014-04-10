@@ -30,12 +30,14 @@ function serialConnection() {
       });
       serialPort.on('open', function (err) {
         console.log('serial connection established...');
-        serialPort.write('a', function(err, results) {
+        /*
+        serialPort.write('00000', function(err, results) {
           console.log('sending hello world byte...');
           if (err != undefined){
             console.log(err);
           }
         });
+        */
       }); 
     }
     
@@ -43,20 +45,27 @@ function serialConnection() {
     initPorts();
   }
   
-  this.serialwrite = function(data){
+  this.serialwrite = function(data, tryHard){
     if (portFound){
       //console.log(serialPort);
       console.log(data);
-      for (i = 0; i < 10; i ++) {
-        serialPort.write(data, function(err, results) {
-          if (err != undefined){
-            console.log(err);
-          }
-        });
+      if (tryHard == false) {
+          serialPort.write(data, function(err, results) {
+            if (err != undefined){
+              console.log(err);
+            }
+          }); 
+      } else {
+        for (i = 0; i < 5; i ++) {
+          serialPort.write(data, function(err, results) {
+            if (err != undefined){
+              console.log(err);
+            }
+          });
+        }
       }
     } else {
       console.log(data);
-      return data;
     }
   }
   

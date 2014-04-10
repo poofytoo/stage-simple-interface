@@ -9,9 +9,20 @@ var serv = new SerialConnection();
 var cmd = new Commands(serv);
 
 exports.go = function(req, res) {
-  console.log(req.body.cmd);
-  res.send("ok");
-  execCommand = 'cmd.' + req.body.cmd;
-  console.log(execCommand);
-  eval(execCommand);
+  ok = true;
+  if (req.body.cmd !== undefined && req.body.cmd !== '') {
+    if (req.body.cmd[0] !== '/') {
+      execCommand = 'cmd.' + req.body.cmd;
+      console.log('running command: ' + execCommand);
+      eval(execCommand);
+      message = 'broadcasted ' + req.body.cmd;
+    } else {
+      message = 'comment detected: ' + req.body.cmd;
+    }
+  } else {
+    message = 'empty command';
+    ok = false;
+  }
+  
+  res.send({ok: ok, msg: message});
 };

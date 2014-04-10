@@ -17,6 +17,7 @@ textarea {
   z-index: 10;
   background-color: rgba(255,255,255,0);
   overflow: hidden;
+  outline: none;
 }
 
 .container {
@@ -38,7 +39,7 @@ textarea {
 
 .controls {
   float: left;
-  width: 400px;
+  width: 340px;
 }
 
 .commands-list {
@@ -50,6 +51,7 @@ h1 {
   padding: 0;
   line-height: normal;
   font-weight: 400;
+  margin: 0 0 20px 0;
 }
 
 h2 {
@@ -74,4 +76,21 @@ p {
   margin: 0 0 8px 0;
   padding: 0;
   line-height: normal;
+}
+
+button {
+  background-color: #13c900;
+  color: #fff;
+  padding: 10px 15px;
+  border: 1px solid #12ae02;
+  border-radius: 10px;
+  margin: 10px 0;
+  outline: none;
+  font-size: 14px;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+
+button:hover {
+  opacity: 0.7;
 }

@@ -2,28 +2,45 @@
 <head>
 <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
 </head>
 <body>
 </body>
 </html>
 <h1>SIMPLE Stage Interface</h1>
-<h2>warning: content is not saved</h2>
 <div class="controls">
   <div class="container">
     <div class="line-indicator"></div>
     <textarea id="cmds"></textarea><br />
   </div>
   <button id="go">Run Command</button>
+  <p class="status">waiting for commands...</p>
 </div>
 <div class="commands-list">
-  <h3>oneOn(BOX, R, G, B);</h3>
-  <p>Turns on <em>BOX</em> to <em>R</em>, <em>G</em>, <em>B</em></p>
-  <h3>oneOff(BOX);</h3>
+  <h3>setOne(BOX, R, G, B);</h3>
+  <p>Sets <em>BOX</em> to <em>R</em>, <em>G</em>, <em>B</em></p>
+  
+  <h3>setOneOff(BOX);</h3>
   <p>Turns off <em>BOX</em></p>
-  <h3>flicker();</h3>
-  <p>makes box 4 flicker</p>
+  
+  <h3>setMany([BOX, BOX, ...], R, G, B);</h3>
+  <p>Sets the list of boxes to <em>R</em>, <em>G</em>, <em>B</em></p>
+  
+  <h3>fadeOne(BOX, startR, startG, startB, endR, endG, endB, steps)</h3>
+  <p>Fades a box from start RGB to end RGB, over N steps. Runs at 12fps</p>
+  
+  <h3>fadeOne([BOX, BOX, ...], startR, startG, startB, endR, endG, endB, steps)</h3>
+  <p>Fades all boxes from start RGB to end RGB, over N steps. Runs at 12fps</p>
+  
+  <h3>flicker(BOX);</h3>
+  <p>makes <em>BOX</em> flicker white/black</p>
+  
   <h3>kill();</h3>
   <p>stops all animations (flickers, fade, etc)</p>
+  
+  <h3>AUTONEXT</h3>
+  <p>append AUTONEXT at the end of a command to auto-run the next command.<br />
+  eg: setOne(1, 255, 255, 0); AUTONEXT</p>
 </div>
 
 <script type="text/javascript">
@@ -31,9 +48,37 @@ $(document).ready(function(){
   var currentLine = 0;
   
   var updateLine = function(){
-  
     $('.line-indicator').css('top',currentLine*20 + 'px');
   }
+  
+  var runLine = function(){
+    commands = $('#cmds').val();
+    cmd = commands.split('\n')[currentLine].trim();
+    
+    parsedArray = cmd.split(' ');
+    checkAutoNext = 'AUTONEXT' === parsedArray[parsedArray.length - 1];
+    if (checkAutoNext) {
+      cmd = cmd.substring(0, cmd.length - 9);
+    } 
+    
+    data = {cmd: cmd};
+    $.post('service', data, function(data){
+      $('.status').text(data.msg);
+      if (data.ok) {
+        currentLine ++;
+        updateLine();
+        if (checkAutoNext) {
+          runLine();
+        }
+      }
+    });
+  }
+  
+  // Load initially safed data
+  var dataRef = new Firebase('https://stagesimple.firebaseio.com/');
+  dataRef.once('value', function(snapshot) {
+    $("#cmds").text(snapshot.val().store);
+  });
   
   $("#cmds").on('click', function(){
     line = getLineNumber($('#cmds'));
@@ -42,21 +87,42 @@ $(document).ready(function(){
   });
   
   $('#go').on('click', function(){
-    commands = $('#cmds').val();
-    cmd = commands.split('\n')[currentLine];
-    data = {cmd: cmd};
-    
-    $.post('service', data, function(data){
-      if (data === 'ok') {  
-        currentLine ++;
-        updateLine();
-      }
-    })
-    
+    runLine();
+  });
+  
+  $('textarea').keyup(function (event) {
+    dataRef.set({store: $(this).val()});
+    if (event.keyCode == 13 && event.shiftKey) {
+      enterRow = $(this).val().substr(0, $(this)[0].selectionStart).split("\n").length;
+      currentLine = enterRow - 2;
+      updateLine();
+      runLine();
+    }
   });
 });
 
 function getLineNumber(textarea) {
-    return textarea.val().substr(0, textarea[0].selectionStart).split("\n").length - 1;
+  return textarea.val().substr(0, textarea[0].selectionStart).split("\n").length - 1;
+}
+
+function getCaret(el) {
+  if (el.selectionStart) {
+     return el.selectionStart;
+  } else if (document.selection) {
+     el.focus();
+
+   var r = document.selection.createRange();
+   if (r == null) {
+    return 0;
+   }
+
+    var re = el.createTextRange(),
+    rc = re.duplicate();
+    re.moveToBookmark(r.getBookmark());
+    rc.setEndPoint('EndToStart', re);
+
+    return rc.text.length;
+  }  
+  return 0;
 }
 </script>
